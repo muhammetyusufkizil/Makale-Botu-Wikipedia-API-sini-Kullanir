@@ -1,0 +1,41 @@
+<html>
+<head>
+  <title>Makale Botu</title>
+</head>
+<body>
+  <script>
+    // Kodu buraya yaz
+    // Başlık ve anahtar kelimeyi al
+    var title = prompt("Başlık giriniz:");
+    var keyword = prompt("Anahtar kelime giriniz:");
+    // Wikipedia API'sini kullanarak başlıkla ilgili sayfayı bul
+    var url = "https://tr.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro=true&titles=" + title;
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Başarılı istek
+        var data = JSON.parse(request.responseText);
+        var page = data.query.pages[Object.keys(data.query.pages)[0]];
+        if (page.missing) {
+          // Sayfa bulunamadı
+          alert("Bu başlıkla ilgili bir sayfa bulunamadı.");
+        } else {
+          // Sayfa bulundu
+          var extract = page.extract;
+          // Sayfanın özetini konsola yazdır
+          console.log(extract);
+        }
+      } else {
+        // Hatalı istek
+        alert("Bir hata oluştu.");
+      }
+    };
+    request.onerror = function() {
+      // Bağlantı hatası
+      alert("Bağlantı hatası.");
+    };
+    request.send();
+  </script>
+</body>
+</html>
